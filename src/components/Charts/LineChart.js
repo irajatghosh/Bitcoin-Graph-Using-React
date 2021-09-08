@@ -13,7 +13,7 @@ const options = {
   };
 const LineChart = (props) => {
     const { labels, data } = props.data;
-    console.log("in chart js", labels, data);
+    
     const bitcoinData = {
       labels: labels,
       datasets: [
