@@ -9,45 +9,44 @@ const InputForm = (props) => {
     return today;
   };
   const lastTenDaysDateRange = () => {
-    
-    let from= new Date(Date.now() - 9 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+    let from = new Date(Date.now() - 9 * 24 * 60 * 60 * 1000)
+      .toISOString()
+      .slice(0, 10);
     return from;
   };
-  const [initialFromDate, setInitialFromDate]= useState(lastTenDaysDateRange)
-  const [initialToDate, setInitialToDate]= useState(currentDate)
+  const [initialFromDate] = useState(lastTenDaysDateRange);
+  const [initialToDate] = useState(currentDate);
   const [enteredFromDate, setEnteredFormDate] = useState(lastTenDaysDateRange);
   const [enteredToDate, setEnteredToDate] = useState(currentDate);
   const [validDate, setValidDate] = useState(true);
 
- const {onConfirm} = props;
+  const { onConfirm } = props;
   const dateFromChangeHandler = (event) => {
     //   setFormDate(event.target.value)
     setEnteredFormDate(event.target.value);
-    
   };
   const dateToChangeHandler = (event) => {
     //   setToFormDate(event.target.value)
     setEnteredToDate(event.target.value);
-    
-  }
-   
-useEffect(()=>{
+  };
+
+  useEffect(() => {
     const data = {
-            from: initialFromDate,
-            to: initialToDate,
-          };
-          onConfirm(data);   
-},[])
+      from: initialFromDate,
+      to: initialToDate,
+    };
+    onConfirm(data);
+  }, []);
   const submitHandler = (event) => {
     event.preventDefault();
-    
-    const fromDate= new Date(enteredFromDate);
-    const toDate= new Date(enteredToDate)
-    if(fromDate> toDate){
-        setValidDate(false);
-        return
+
+    const fromDate = new Date(enteredFromDate);
+    const toDate = new Date(enteredToDate);
+    if (fromDate > toDate) {
+      setValidDate(false);
+      return;
     }
-    setValidDate(true)
+    setValidDate(true);
     const data = {
       from: enteredFromDate,
       to: enteredToDate,
@@ -63,10 +62,9 @@ useEffect(()=>{
             <input
               type="date"
               min={initialFromDate}
-             max={initialToDate}
+              max={initialToDate}
               value={enteredFromDate}
               onChange={dateFromChangeHandler}
-              
             />
           </div>
           <div className={classes.inputform__control}>
@@ -74,13 +72,15 @@ useEffect(()=>{
             <input
               type="date"
               value={enteredToDate}
-              
               max={initialToDate}
               min={initialFromDate}
-             onChange={dateToChangeHandler}
-             
+              onChange={dateToChangeHandler}
             />
-            {!validDate && <p>Please select a valid date. To date can't be before From date!</p>}
+            {!validDate && (
+              <p>
+                Please select a valid date. To date can't be before From date!
+              </p>
+            )}
           </div>
         </div>
         <div className={classes.inputform__actions}>
