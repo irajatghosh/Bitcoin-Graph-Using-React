@@ -1,14 +1,15 @@
-
-import {useState} from "react"
+import "./App.css"
+import {useState, useCallback, Fragment} from "react"
 import DisplayGraph from "./components/DisplayGraph/DisplayGraph";
 import InputForm from "./components/InputForm/InputForm"
+
 
 function App() {
   const [bitcoinData, setBitcoinData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const fetchBitcoinData = async (data) => {
+  const fetchBitcoinData = useCallback( async (data) => {
     //API call
     const { from, to } = data;
     const startDate = from;
@@ -22,7 +23,7 @@ function App() {
         `https://api.coindesk.com/v1/bpi/historical/close.json?start=${startDate}&end=${endDate}&index=[USD]`
       );
       if (!response.ok) {
-        throw new Error("Something went wrong!");
+        throw new Error("Something went wrong! Please check the dates and try again.");
       }
       const data = await response.json();
       const bpiData = data.bpi;
@@ -30,33 +31,28 @@ function App() {
       const transformedData = {
         labels: Object.keys(bpiData),
         data: Object.values(bpiData),
-        // datasets: [
-        //   {
-        //     label: "Bitcoin Price Graph",
-        //     data: Object.values(bpiData),
-        //     fill: false,
-        //     backgroundColor: "#f7931a",
-        //     borderColor: "#f7931a",
-        //   },
-        // ],
+        
       };
-
-      console.log("the backend data", bpiData);
-      console.log("the transformed data", transformedData);
-      // console.log("the converted data", newArray);
       setBitcoinData(transformedData);
-      console.log("state data", bitcoinData);
+      
     } catch (err) {
       setError(err.message);
     }
     setIsLoading(false);
-  };
+  },[]);
+  
   return (
-    <div className="App">
-      
+    <Fragment>
+      <section>
       <InputForm onConfirm={fetchBitcoinData} />
-      <DisplayGraph coinData={bitcoinData} />
-    </div>
+      </section>
+    <section>
+      {!isLoading && bitcoinData.length !== 0 && <DisplayGraph coinData={bitcoinData} />}
+      {isLoading &&   <p>Loading...</p>  }
+      {!isLoading && error && <p>{error}</p> }
+      </section>
+    </Fragment>
+      
   );
 }
 

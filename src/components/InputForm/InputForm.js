@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import Card from "../UI/Card";
 import classes from "./InputForm.module.css";
@@ -6,41 +6,48 @@ import classes from "./InputForm.module.css";
 const InputForm = (props) => {
   const currentDate = () => {
     let today = new Date().toISOString().slice(0, 10);
-    let from= new Date(Date.now() - 9 * 24 * 60 * 60 * 1000)
-    console.log(today);
-    console.log(from);
     return today;
   };
   const lastTenDaysDateRange = () => {
     
     let from= new Date(Date.now() - 9 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
-    
-    console.log(from);
     return from;
   };
+  const [initialFromDate, setInitialFromDate]= useState(lastTenDaysDateRange)
+  const [initialToDate, setInitialToDate]= useState(currentDate)
   const [enteredFromDate, setEnteredFormDate] = useState(lastTenDaysDateRange);
   const [enteredToDate, setEnteredToDate] = useState(currentDate);
-  const [toDateTouched, setToDateTouched] = useState(false);
-  const [enteredFromDateValid, setEnteredFromDateValid] = useState(true);
+  const [validDate, setValidDate] = useState(true);
 
+ const {onConfirm} = props;
   const dateFromChangeHandler = (event) => {
+    //   setFormDate(event.target.value)
     setEnteredFormDate(event.target.value);
+    
   };
   const dateToChangeHandler = (event) => {
+    //   setToFormDate(event.target.value)
     setEnteredToDate(event.target.value);
-
-    setEnteredFromDateValid(true);
-    setToDateTouched(true)
-  };
-  const formDateTouched = () => {
-    setToDateTouched(true);
-  };
+    
+  }
+   
+useEffect(()=>{
+    const data = {
+            from: initialFromDate,
+            to: initialToDate,
+          };
+          onConfirm(data);   
+},[])
   const submitHandler = (event) => {
     event.preventDefault();
-    if (!enteredToDate || !toDateTouched) {
-      setEnteredFromDateValid(false);
-      return;
+    
+    const fromDate= new Date(enteredFromDate);
+    const toDate= new Date(enteredToDate)
+    if(fromDate> toDate){
+        setValidDate(false);
+        return
     }
+    setValidDate(true)
     const data = {
       from: enteredFromDate,
       to: enteredToDate,
@@ -55,22 +62,25 @@ const InputForm = (props) => {
             <label>From</label>
             <input
               type="date"
-              max="2022-12-31"
+              min={initialFromDate}
+             max={initialToDate}
               value={enteredFromDate}
               onChange={dateFromChangeHandler}
+              
             />
           </div>
           <div className={classes.inputform__control}>
             <label>To</label>
             <input
               type="date"
-              min={enteredFromDate}
-              max="2022-12-31"
               value={enteredToDate}
-              onChange={dateToChangeHandler}
-              onBlur={formDateTouched}
+              
+              max={initialToDate}
+              min={initialFromDate}
+             onChange={dateToChangeHandler}
+             
             />
-            {!enteredFromDateValid && <p>Please select a date.</p>}
+            {!validDate && <p>Please select a valid date. To date can't be before From date!</p>}
           </div>
         </div>
         <div className={classes.inputform__actions}>

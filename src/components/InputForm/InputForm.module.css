@@ -1,5 +1,6 @@
 .inputdata {
-    background-color: #a892ee;
+    background-color: #060008;
+    color: white;
     padding: 1rem;
     margin: 2rem auto;
     width: 50rem;
@@ -13,8 +14,8 @@
     font: inherit;
     cursor: pointer;
     padding: 1rem 2rem;
-    border: 1px solid #40005d;
-    background-color: #40005d;
+    border: 1px solid #f7931a;
+    background-color: #f7931a;
     color: white;
     border-radius: 12px;
     margin-right: 1rem;
