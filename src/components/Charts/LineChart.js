@@ -1,3 +1,4 @@
+import { Line } from "react-chartjs-2";
 
 const options = {
     scales: {
@@ -11,11 +12,22 @@ const options = {
     },
   };
 const LineChart = (props) => {
-    return (
-        <div>
-            <h2>Chart Here</h2>
-        </div>
-    )
+    const { labels, data } = props.data;
+    console.log("in chart js", labels, data);
+    const bitcoinData = {
+      labels: labels,
+      datasets: [
+        {
+          label: "Bitcoin price graph (USD)",
+          data: data,
+          fill: false,
+          backgroundColor: "#f7931a",
+          borderColor: "#f7931a",
+        },
+      ],
+    };
+    return <Line data={bitcoinData} options={options} />;
+    
 }
 
 export default LineChart

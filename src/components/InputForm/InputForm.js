@@ -6,11 +6,20 @@ import classes from "./InputForm.module.css";
 const InputForm = (props) => {
   const currentDate = () => {
     let today = new Date().toISOString().slice(0, 10);
+    let from= new Date(Date.now() - 9 * 24 * 60 * 60 * 1000)
     console.log(today);
+    console.log(from);
     return today;
   };
-  const [enteredFromDate, setEnteredFormDate] = useState("");
-  const [enteredToDate, setEnteredToDate] = useState("");
+  const lastTenDaysDateRange = () => {
+    
+    let from= new Date(Date.now() - 9 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+    
+    console.log(from);
+    return from;
+  };
+  const [enteredFromDate, setEnteredFormDate] = useState(lastTenDaysDateRange);
+  const [enteredToDate, setEnteredToDate] = useState(currentDate);
   const [toDateTouched, setToDateTouched] = useState(false);
   const [enteredFromDateValid, setEnteredFromDateValid] = useState(true);
 
@@ -21,6 +30,7 @@ const InputForm = (props) => {
     setEnteredToDate(event.target.value);
 
     setEnteredFromDateValid(true);
+    setToDateTouched(true)
   };
   const formDateTouched = () => {
     setToDateTouched(true);

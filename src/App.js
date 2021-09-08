@@ -55,7 +55,7 @@ function App() {
     <div className="App">
       
       <InputForm onConfirm={fetchBitcoinData} />
-      <DisplayGraph />
+      <DisplayGraph coinData={bitcoinData} />
     </div>
   );
 }
